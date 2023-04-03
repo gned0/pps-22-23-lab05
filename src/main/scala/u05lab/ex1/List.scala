@@ -59,14 +59,20 @@ enum List[A]:
   def reverse(): List[A] = foldLeft[List[A]](Nil())((l, e) => e :: l)
 
   /** EXERCISES */
-  def zipRight: List[(A, Int)] = ???
+  def zipRight: List[(A, Int)] = this match
+    case h :: t => ???
 
-  def partition(pred: A => Boolean): (List[A], List[A]) = ???
+
+  // Svolto con Pirazzoli
+  def partition(pred: A => Boolean): (List[A], List[A]) =
+    (this.filter(pred), this.filter(!pred(_)))
 
   def span(pred: A => Boolean): (List[A], List[A]) = ???
 
   /** @throws UnsupportedOperationException if the list is empty */
-  def reduce(op: (A, A) => A): A = ???
+  def reduce(op: (A, A) => A): A = this match
+    case h :: t => ???
+    case _ => throw new UnsupportedOperationException
 
   def takeRight(n: Int): List[A] = ???
 
