@@ -110,33 +110,50 @@ enum List[A]:
       case (prefix, rest) => (prefix, rest)
   
   /** @throws UnsupportedOperationException if the list is empty */
-  def reduce(op: (A, A) => A): A = {
-    if (this.isEmpty) throw new UnsupportedOperationException("Cannot reduce an empty list.")
-    @tailrec
-    def reduceRec(list: List[A], acc: A): A = list match
-      case h :: t => reduceRec(t, op(h, acc))
-      case Nil() => acc
-    reduceRec(this.tail.get, this.head.get)
-  }
+//  def reduce(op: (A, A) => A): A = {
+//    if (this.isEmpty) throw new UnsupportedOperationException("Cannot reduce an empty list.")
+//    @tailrec
+//    def reduceRec(list: List[A], acc: A): A = list match
+//      case h :: t => reduceRec(t, op(h, acc))
+//      case Nil() => acc
+//    reduceRec(this.tail.get, this.head.get)
+//  }
 
-  def takeRight(n: Int): List[A] = {
-    @tailrec
-    def takeRightRec(list: List[A], acc: List[A]): List[A] = list match {
-      case Nil() => acc
-      case h :: t => takeRightRec(t, h :: acc)
-    }
-    val reversedAcc = takeRightRec(this, Nil())
+  def reduce(op: (A, A) => A): A =
+    this match
+      case h :: t => t.foldLeft(h)(op)
+      case _ => throw new UnsupportedOperationException("Cannot reduce an empty list.")
 
-    reversedAcc.take(n).reverse()
-  }
+//  def takeRight(n: Int): List[A] = {
+//    @tailrec
+//    def takeRightRec(list: List[A], acc: List[A]): List[A] = list match {
+//      case Nil() => acc
+//      case h :: t => takeRightRec(t, h :: acc)
+//    }
+//    val reversedAcc = takeRightRec(this, Nil())
+//
+//    reversedAcc.take(n).reverse()
+//  }
+
+  def takeRight(n: Int): List[A] =
+    foldRight(Nil(): List[A], 0) { (e, acc) =>
+      val (list, count) = acc
+      if (count < n) (e :: list, count + 1)
+      else acc
+    }._1
+
+//  def collect[B](pf: PartialFunction[A, B]): List[B] = {
+//    @tailrec
+//    def collectRec(list: List[A], out: List[B]): List[B] = list match
+//      case h :: t if pf.isDefinedAt(h) => collectRec(t, pf(h) :: out)
+//      case _ :: t => collectRec(t, out)
+//      case _ => out.reverse()
+//    collectRec(this, Nil())
+//  }
 
   def collect[B](pf: PartialFunction[A, B]): List[B] = {
-    @tailrec
-    def collectRec(list: List[A], out: List[B]): List[B] = list match
-      case h :: t if pf.isDefinedAt(h) => collectRec(t, pf(h) :: out)
-      case _ :: t => collectRec(t, out)
-      case _ => out.reverse()
-    collectRec(this, Nil())
+    foldRight(Nil(): List[B]) { (e, acc) =>
+      if pf.isDefinedAt(e) then pf(e) :: acc
+      else acc
+    }
   }
-
-
