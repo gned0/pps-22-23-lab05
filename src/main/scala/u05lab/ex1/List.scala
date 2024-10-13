@@ -107,7 +107,7 @@ enum List[A]:
       then (e :: acc._1, acc._2) 
       else (acc._1, e :: acc._2)  
     } match 
-      case (prefix, rest) => (prefix.reverse(), rest.reverse())
+      case (prefix, rest) => (prefix, rest)
   
   /** @throws UnsupportedOperationException if the list is empty */
   def reduce(op: (A, A) => A): A = {
