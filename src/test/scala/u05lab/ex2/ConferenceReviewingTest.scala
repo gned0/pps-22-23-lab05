@@ -57,6 +57,12 @@ class ConferenceReviewingTest:
     assertEquals(List((4, 7.0), (2, 7.5), (1, 8.5)), cr.sortedAcceptedArticles())
 
   @Test
-  def testAverageWeightedFinalScoreMap(): Unit = ??? // TODO
+  def testAverageWeightedFinalScoreMap(): Unit =
+    assertEquals((4.8 + 5.4) / 2, cr.averageWeightedFinalScoreMap()(1), 0.01)
+    assertEquals((9.0 + 6.0) / 2, cr.averageWeightedFinalScoreMap()(2), 0.01)
+    assertEquals((0.9 + 1.6) / 2, cr.averageWeightedFinalScoreMap()(3), 0.01)
+    assertEquals((3.6 + 5.6 + 5.6) / 3, cr.averageWeightedFinalScoreMap()(4), 0.01)
+    assertEquals((6.0 + 7.0) / 2, cr.averageWeightedFinalScoreMap()(5), 0.01)
+    assertEquals(5, cr.averageWeightedFinalScoreMap().size)
 
 
